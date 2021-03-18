@@ -853,9 +853,9 @@ void HexEditorCtrl::OnTagAddSelection( wxCommandEvent& event ) {
 	TagCreator( false );
 	}
 
-void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ) {
+void HexEditorCtrl::OnTagEditCreator(bool use_last_pos) {
 	TagElement *TAG;
-	uint64_t pos = LastRightClickAt;
+	uint64_t pos = use_last_pos ? (uint64_t)GetLocalHexInsertionPoint() / 2 : LastRightClickAt;
 #ifdef _DEBUG_TAG_
 	std::cout << " Tag Edit on " << pos << std::endl;
 #endif
@@ -890,6 +890,11 @@ void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ) {
 	wxUpdateUIEvent eventx( TAG_CHANGE_EVENT );
 	GetEventHandler()->ProcessEvent( eventx );
 	}
+
+void HexEditorCtrl::OnTagEdit( wxCommandEvent& event ) {
+	(void)event;
+	OnTagEditCreator(false);
+}
 
 void HexEditorCtrl::TagHideAll( void ) {
 	hex_ctrl->OnTagHideAll();

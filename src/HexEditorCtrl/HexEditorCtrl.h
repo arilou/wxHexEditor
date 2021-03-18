@@ -192,6 +192,7 @@ class HexEditorCtrl: public HexEditorCtrlGui {
 		void TagCreator( bool QuickTag );
 		void OnTagAddSelection( wxCommandEvent& event );
 		void OnTagQuick( wxCommandEvent& event );
+		void OnTagEditCreator(bool use_last_pos);
 		void OnTagEdit( wxCommandEvent& event );
 		void OnFocus( wxFocusEvent& event );
 		void OnKillFocus( wxFocusEvent& event );

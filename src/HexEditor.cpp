@@ -986,6 +986,8 @@ void HexEditor::OnKeyboardInput( wxKeyEvent& event ) {
 			case (0x54): //! Normal T
 				if( event.ControlDown() )
 					HexEditorCtrl::TagCreator( !event.ShiftDown() );
+				else if (event.AltDown())
+					HexEditorCtrl::OnTagEditCreator(true);
 				else
 					event.Skip();
 				break;
@@ -1207,7 +1209,7 @@ void HexEditor::ShowContextMenu( const wxMouseEvent& event ) {
 	menu.AppendSeparator();
 	menu.Append(idTagQuick,        wxString( _("Quick Tag") ) + wxChar('\t') + wxT("CTRL+T"), _("Creates empty tag with Random Color."));
 	menu.Append(idTagAddSelection, wxString( _("New Tag") )+ wxChar('\t') + wxT("CTRL+SHIFT+T") );
-	menu.Append(idTagEdit,          _("Tag Edit"));
+	menu.Append(idTagEdit,          _("Tag Edit")+ wxChar('\t') + wxT("ALT+T") );
 //	menu.AppendSeparator();
 //	menu.Append(idClose, 			 _("Close File")); Results Seg-error
 
