@@ -108,7 +108,7 @@ void TagElement::Show( const wxPoint& pos, wxWindow *parent ){
 		wxP->SetAutoLayout( true );
 		wxP->SetSizer( topSizer );
 		topSizer->Fit(wxP);
-		wxP->Position( pos, wxSize(0,-50)); //topSizer->GetSize() ); //size put gap here
+		wxP->Position( pos, wxSize(0,20)); //topSizer->GetSize() ); //size put gap here
 		wxP->Show();
 // TODO (death#1#): Auto hide on popup menus. Modularized!
 		}
