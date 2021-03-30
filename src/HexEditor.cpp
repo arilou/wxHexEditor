@@ -1469,21 +1469,20 @@ void HexEditor::UpdateCursorLocation( bool force ) {
 			}
 		}
 #if wxUSE_STATUSBAR
-	if( statusbar != NULL ) {
-		statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/wxMax(1,ByteCapacity()) ), 0);    //wxMax for avoid divide by zero
-		statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 1);
-		statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), reinterpret_cast<uint8_t*>(bfr.GetData())[0]), 2);
-		if( !select->GetState() ) {
-			statusbar->SetStatusText(_("Selected Block: N/A"), 3);
-			statusbar->SetStatusText(_("Block Size: N/A"),4);
-			}
-		else {
+	if (statusbar) {
+			statusbar->SetStatusText(wxString::Format(_("Cursor Offset: ") +  offset_ctrl->GetFormatedOffsetString( CursorOffset(), true )), 0);
+		if (!select->GetState()) {
+			statusbar->SetStatusText(_("Selected Block: N/A"), 1);
+			statusbar->SetStatusText(_("Block Size: N/A"),2);
+		} else {
 			statusbar->SetStatusText(wxString::Format(_("Selected Block: %" wxLongLongFmtSpec "u -> %" wxLongLongFmtSpec "u" " [0X%" wxLongLongFmtSpec "x -> 0x%" wxLongLongFmtSpec "X]"),
-									 select->GetStart(),select->GetEnd(), select->GetStart(),select->GetEnd()), 3);
+									 select->GetStart(),select->GetEnd(), select->GetStart(),select->GetEnd()), 1);
 			statusbar->SetStatusText(wxString::Format(_("Block Size: %" wxLongLongFmtSpec "u" " [0x%" wxLongLongFmtSpec "X]"),
-									 select->GetSize(), select->GetSize()), 4);
-			}
+									 select->GetSize(), select->GetSize()), 2);
 		}
+			statusbar->SetStatusText(wxString::Format(_("Cursor Value: %u"), reinterpret_cast<uint8_t*>(bfr.GetData())[0]), 3);
+			statusbar->SetStatusText(wxString::Format(_("Showing Page: %" wxLongLongFmtSpec "u"), page_offset/wxMax(1,ByteCapacity()) ), 4);    //wxMax for avoid divide by zero
+	}
 #endif // wxUSE_STATUSBAR
 #ifdef _DEBUG_MUTEX_
 	std::cout << "mutex Update UnLocking..." << std::endl;
