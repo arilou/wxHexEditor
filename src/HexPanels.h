@@ -149,7 +149,6 @@ class TagPanel : public TagPanelGui{
 		void OnTagSelect( wxCommandEvent& event );
 		void OnTagEditSelect(wxCommandEvent& event);
 		//void OnUpdate( wxCommandEvent& event ){}
-		void OnRightMouse( wxMouseEvent& event );
 		void OnDeleteTag( wxCommandEvent& event );
 		void OnEditTag( wxCommandEvent& event );
 		void OnKeyDown( wxKeyEvent& event );

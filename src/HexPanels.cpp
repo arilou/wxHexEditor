@@ -523,14 +523,6 @@ void TagPanel::OnTagEditSelect(wxCommandEvent& event) {
 	EditTag();
 }
 
-void TagPanel::OnRightMouse( wxMouseEvent& event ){
-	TagPanelList->SetSelection( TagPanelList->HitTest( event.GetPosition() ) );
-	wxMenu menu;
-	menu.Append(idDeleteTag, _("Delete"));
-	menu.Append(idEditTag,   _("Edit"));
-	PopupMenu(&menu, event.GetPosition() );
-	}
-
 void TagPanel::OnDeleteTag( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();

@@ -262,7 +262,6 @@ class TagPanelGui : public wxPanel
 		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnTagSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTagEditSelect(wxCommandEvent& event) { event.Skip(); }
-		virtual void OnRightMouse( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnClear( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnHide( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTAG( wxCommandEvent& event ) { event.Skip(); }
