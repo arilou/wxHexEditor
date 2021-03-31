@@ -28,7 +28,7 @@ TagHtmlListBox::TagHtmlListBox(wxWindow *parent)
              : wxHtmlListBox(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                              0)
 {
-    m_change = false;
+    m_change = true;
 	wxString Colour;
 	wxColour Background;
 
