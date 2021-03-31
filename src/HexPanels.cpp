@@ -512,6 +512,10 @@ void TagPanel::OnTagSelect(wxCommandEvent& event) {
 			}
 	}
 
+void TagPanel::OnTagEditSelect(wxCommandEvent& event) {
+	EditTag();
+}
+
 void TagPanel::OnRightMouse( wxMouseEvent& event ){
 	TagPanelList->SetSelection( TagPanelList->HitTest( event.GetPosition() ) );
 	wxMenu menu;
@@ -533,7 +537,7 @@ void TagPanel::OnDeleteTag( wxCommandEvent& event ){
 			}
 	}
 
-void TagPanel::OnEditTag( wxCommandEvent& event ){
+void TagPanel::EditTag( void ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();
 	unsigned selection = TagPanelList->GetSelection();
 
@@ -561,6 +565,10 @@ void TagPanel::OnEditTag( wxCommandEvent& event ){
 			}
 	}
 
+void TagPanel::OnEditTag( wxCommandEvent& event ){
+	EditTag();
+}
+
 void TagPanel::OnKeyDown( wxKeyEvent& event ){
     if( event.GetKeyCode() == WXK_DELETE ){
         HexEditor* MyHexEditor = parent->GetActiveHexEditor();
@@ -574,9 +582,13 @@ void TagPanel::OnKeyDown( wxKeyEvent& event ){
                 }
         if( TagPanelList->GetCount() )
             TagPanelList->SetSelection( selection > TagPanelList->GetCount()-1 ? TagPanelList->GetCount()-1 : selection );
-        }
-    event.Skip();
 	}
+	else if( event.GetKeyCode() == WXK_RETURN ){
+		EditTag();
+	}
+
+    event.Skip();
+}
 
 void SearchPanel::OnTAG( wxCommandEvent& event ){
 	HexEditor* MyHexEditor = parent->GetActiveHexEditor();

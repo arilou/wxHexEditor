@@ -43,6 +43,7 @@
 #include <wx/hyperlink.h>
 #include <wx/filepicker.h>
 #include <wx/clrpicker.h>
+#include <wx/htmllbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -214,6 +215,35 @@ class InterpreterGui : public wxPanel
 
 };
 
+class TagHtmlListBox : public wxHtmlListBox
+{
+public:
+    TagHtmlListBox() { }
+    TagHtmlListBox(wxWindow *parent);
+
+    void SetChangeSelFg(bool change) { m_change = change; }
+	void InsertItems(wxArrayString str_list, int);
+	unsigned int GetCount();
+
+protected:
+    // override this method to return data to be shown in the listbox (this is
+    // mandatory)
+    virtual wxString OnGetItem(size_t n) const wxOVERRIDE;
+
+    // change the appearance by overriding these functions (this is optional)
+    virtual void OnDrawSeparator(wxDC& dc, wxRect& rect, size_t n) const wxOVERRIDE;
+    virtual wxColour GetSelectedTextColour(const wxColour& colFg) const wxOVERRIDE;
+
+    // flag telling us whether we should use fg colour even for the selected
+    // item
+    bool m_change;
+	wxArrayString m_item_list;
+
+public:
+    wxDECLARE_NO_COPY_CLASS(TagHtmlListBox);
+    wxDECLARE_DYNAMIC_CLASS(TagHtmlListBox);
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 /// Class TagPanelGui
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,7 +252,8 @@ class TagPanelGui : public wxPanel
 	private:
 
 	protected:
-		wxListBox* TagPanelList;
+		TagHtmlListBox *TagPanelList;
+
 		wxButton* m_buttonClear;
 		wxButton* m_buttonHide;
 		wxButton* m_buttonTAG;
@@ -230,6 +261,7 @@ class TagPanelGui : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void OnTagSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTagEditSelect(wxCommandEvent& event) { event.Skip(); }
 		virtual void OnRightMouse( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnClear( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnHide( wxCommandEvent& event ) { event.Skip(); }

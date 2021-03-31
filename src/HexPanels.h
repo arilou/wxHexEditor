@@ -143,9 +143,11 @@ class TagPanel : public TagPanelGui{
 		class HexEditorFrame *parent;
 		virtual void Set( ArrayOfTAG& TagArray );
 		void Clear( void );
+		void EditTag( void );
 		void OnClear( wxCommandEvent& event );
 		void OnHide( wxCommandEvent& event );
 		void OnTagSelect( wxCommandEvent& event );
+		void OnTagEditSelect(wxCommandEvent& event);
 		//void OnUpdate( wxCommandEvent& event ){}
 		void OnRightMouse( wxMouseEvent& event );
 		void OnDeleteTag( wxCommandEvent& event );

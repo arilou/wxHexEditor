@@ -17,6 +17,76 @@
 
 #include "HexEditorGui.h"
 
+
+// ============================================================================
+// TagHtmlListBox
+// ============================================================================
+
+wxIMPLEMENT_DYNAMIC_CLASS(TagHtmlListBox, wxHtmlListBox);
+
+TagHtmlListBox::TagHtmlListBox(wxWindow *parent)
+             : wxHtmlListBox(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                             0)
+{
+    m_change = false;
+	wxString Colour;
+	wxColour Background;
+
+    SetMargins(5, 5);
+	if( wxConfig::Get()->Read( _T("ColourHexBackground"), &Colour) )
+		Background.Set( Colour );
+	else
+		Background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) ;
+	SetBackgroundColour(Background);
+}
+
+void TagHtmlListBox::OnDrawSeparator(wxDC& dc, wxRect& rect, size_t) const
+{
+	dc.SetPen(wxPen(*wxStockGDI::GetColour(wxStockGDI::COLOUR_LIGHTGREY), 1, wxPENSTYLE_SHORT_DASH));
+	dc.DrawLine(rect.x, rect.y, rect.GetRight(), rect.y);
+	dc.DrawLine(rect.x, rect.GetBottom(), rect.GetRight(), rect.GetBottom());
+}
+
+wxString TagHtmlListBox::OnGetItem(size_t n) const
+{
+	return m_item_list[n];
+}
+
+wxColour TagHtmlListBox::GetSelectedTextColour(const wxColour& colFg) const
+{
+    return m_change ? wxHtmlListBox::GetSelectedTextColour(colFg) : colFg;
+}
+
+void TagHtmlListBox::InsertItems(wxArrayString str_list, int)
+{
+    int level = 0;
+	wxString Colour;
+	wxColour Foreground;
+
+	if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
+		Foreground.Set( Colour );
+	else
+		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
+
+	for( unsigned i =0 ; i < str_list.Count() ; i++) {
+		wxString label = wxString::Format("<h%d><font color=%s>"
+										  "%s</font>"
+										  "</h%d>",
+										  level,
+										  Foreground.GetAsString(wxC2S_HTML_SYNTAX),
+										  str_list[i], level);
+		m_item_list.Add(label);
+	}
+
+    SetItemCount(str_list.Count());
+	RefreshAll();
+}
+
+unsigned int TagHtmlListBox::GetCount()
+{
+	return m_item_list.Count();
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 HexEditorGui::HexEditorGui( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
@@ -833,7 +903,7 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	wxBoxSizer* mainSize;
 	mainSize = new wxBoxSizer( wxVERTICAL );
 
-	TagPanelList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+	TagPanelList = new TagHtmlListBox(this);
 	mainSize->Add( TagPanelList, 1, wxALL|wxEXPAND, 2 );
 
 	wxBoxSizer* bSizerBottom;
@@ -863,6 +933,7 @@ TagPanelGui::TagPanelGui( wxWindow* parent, wxWindowID id, const wxPoint& pos, c
 	// Connect Events
 	TagPanelList->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( TagPanelGui::OnKeyDown ), NULL, this );
 	TagPanelList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
+	TagPanelList->Connect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( TagPanelGui::OnTagEditSelect ), NULL, this );
 	TagPanelList->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 	m_buttonHide->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnHide ), NULL, this );
@@ -874,6 +945,7 @@ TagPanelGui::~TagPanelGui()
 	// Disconnect Events
 	TagPanelList->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( TagPanelGui::OnKeyDown ), NULL, this );
 	TagPanelList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( TagPanelGui::OnTagSelect ), NULL, this );
+	TagPanelList->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( TagPanelGui::OnTagEditSelect ), NULL, this );
 	TagPanelList->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TagPanelGui::OnRightMouse ), NULL, this );
 	m_buttonClear->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnClear ), NULL, this );
 	m_buttonHide->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TagPanelGui::OnHide ), NULL, this );
