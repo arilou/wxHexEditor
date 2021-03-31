@@ -59,24 +59,7 @@ wxColour TagHtmlListBox::GetSelectedTextColour(const wxColour& colFg) const
 
 void TagHtmlListBox::InsertItems(wxArrayString str_list, int)
 {
-    int level = 0;
-	wxString Colour;
-	wxColour Foreground;
-
-	if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
-		Foreground.Set( Colour );
-	else
-		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
-
-	for( unsigned i =0 ; i < str_list.Count() ; i++) {
-		wxString label = wxString::Format("<h%d><font color=%s>"
-										  "%s</font>"
-										  "</h%d>",
-										  level,
-										  Foreground.GetAsString(wxC2S_HTML_SYNTAX),
-										  str_list[i], level);
-		m_item_list.Add(label);
-	}
+	m_item_list = str_list;
 
     SetItemCount(str_list.Count());
 	RefreshAll();

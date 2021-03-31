@@ -486,12 +486,19 @@ void TagPanel::OnClear( wxCommandEvent& event ){
 void TagPanel::Set( ArrayOfTAG& TagArray ){
 	mutextag.Lock();
 	wxArrayString str;
-	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
-		str.Add( TagArray.Item(i)->tag.IsEmpty() ?
+	wxString label;
+	for(unsigned i = 0 ; i < TagArray.Count() ; i++) {
+		label =  TagArray.Item(i)->tag.IsEmpty() ?
 // TODO (death#1#): wxLongLongFmtSpec need here!!!
 					wxString::Format("%d. Offset %" wxLongLongFmtSpec "u - %" wxLongLongFmtSpec "u : %" wxLongLongFmtSpec "u",
 								i+1, TagArray.Item(i)->start, TagArray.Item(i)->end, TagArray.Item(i)->Size() )
-					: TagArray.Item(i)->tag );
+					: TagArray.Item(i)->tag;
+		str.Add( wxString::Format("<h0><font color=%s>"
+								  "%s"
+								  "</font></h0>",
+								  TagArray.Item(i)->NoteClrData.GetColour().GetAsString(wxC2S_HTML_SYNTAX),
+								  label) );
+	}
 
 	TagPanelList->Clear();
 	if(str.Count())
@@ -613,8 +620,21 @@ void SearchPanel::OnClear( wxCommandEvent& event ){
 void SearchPanel::Set(ArrayOfTAG& TagArray){
 	mutextag.Lock();
 	wxArrayString str;
-	for(unsigned i = 0 ; i < TagArray.Count() ; i++)
-		str.Add( wxString::Format("%d. Offset %" wxLongLongFmtSpec "u",i+1, TagArray.Item(i)->start ) );
+	wxString Colour;
+	wxColour Foreground;
+
+	if( wxConfig::Get()->Read( _T("ColourHexForeground"), &Colour) )
+		Foreground.Set( Colour );
+	else
+		Foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) ;
+
+	for(unsigned i = 0 ; i < TagArray.Count() ; i++) {
+		str.Add( wxString::Format("<h0><font color=%s>"
+								  "%d. Offset %"
+								  "</font></h0>",
+								  Foreground.GetAsString(wxC2S_HTML_SYNTAX),
+								  wxLongLongFmtSpec "u",i+1, TagArray.Item(i)->start ) );
+	}
 	TagPanelList->Clear();
 	if(str.Count())
 		TagPanelList->InsertItems(str,0);
